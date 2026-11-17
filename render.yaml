@@ -1,0 +1,23 @@
+# TrueAgent — Render Blueprint (free tier, $0, no card)
+# Deploy: in the Render dashboard, New -> Blueprint -> connect itaro9110/trueagent.
+# Secrets (GEMINI_API_KEY) are sync:false on purpose: set them in the
+# dashboard under Environment — never commit a key.
+# Docs: docs/DEPLOY_RENDER.md
+services:
+  - type: web
+    name: trueagent
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    healthCheckPath: /api/status
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: MOCK_PAYMENTS
+        value: "false"
+      - key: AGENT_ADDRESS
+        value: 37f3bg4GJRZNFdETmh3ZHHnwjbTVm5NZfJVDiSVegKuriJEpoT

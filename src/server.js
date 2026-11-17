@@ -20,7 +20,9 @@ import { handleMcp } from "./mcp.js";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC = join(ROOT, "public");
 const PORT = Number(process.env.PORT ?? 8787);
-const HOST = process.env.HOST ?? "127.0.0.1";
+// Default bind is 0.0.0.0 (not loopback) so the service is reachable when
+// hosted (Render/Fly/Koyeb/...); override with HOST only for local-only runs.
+const HOST = process.env.HOST ?? "0.0.0.0";
 
 // ---- config (config.json + env overrides) ----
 const config = JSON.parse(readFileSync(join(ROOT, "config.json"), "utf8"));
