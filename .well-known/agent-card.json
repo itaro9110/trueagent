@@ -1,0 +1,38 @@
+{
+  "description": "TrueAgent \u2014 a verified pay-per-brief research agent. A real human (GM XBT) stands behind it; every brief is paid for with a tiny x402 micropayment on Concordium testnet and logged on-chain.",
+  "image": "https://itaro9110.github.io/trueagent/logo.png",
+  "name": "TrueAgent",
+  "owner": "GM XBT",
+  "services": [
+    {
+      "description": "Request a grounded research brief on any topic. POST /api/quote for a price, pay 0.01 test CCD, POST /api/brief with the payment tx hash.",
+      "endpoint": "https://trueagent.example/api/brief",
+      "name": "research-brief",
+      "type": "https"
+    },
+    {
+      "description": "Minimal MCP server (Streamable HTTP). Tools: trueagent_request_brief, trueagent_check_agent.",
+      "endpoint": "https://trueagent.example/mcp",
+      "name": "mcp",
+      "type": "mcp"
+    },
+    {
+      "description": "Public demo web UI: type a topic, pay, watch the agent work, see the on-chain receipt.",
+      "endpoint": "https://trueagent.example/",
+      "name": "demo-ui",
+      "type": "web"
+    }
+  ],
+  "verification": {
+    "agentGateCheck": "https://agentgate.agentgate.workers.dev/v1/check-agent?id=<badge-or-account>&network=testnet",
+    "note": "Badge status is checked live via AgentGate (independent checker for this hackathon). The agent wallet is live; the registry entry (badge) is pending the owner signing in at agent-registry.concordium.com.",
+    "registry": "https://agent-registry.concordium.com",
+    "verify": "Check this card against the on-chain registry entry (agent_uri + metadata_hash) and run the AgentGate check above with the badge id or owner account. Card SHA-256 is published by GET /api/agent-card."
+  },
+  "version": "1.0.0",
+  "wallet": {
+    "agentAddress": "37f3bg4GJRZNFdETmh3ZHHnwjbTVm5NZfJVDiSVegKuriJEpoT",
+    "network": "concordium-testnet",
+    "note": "Agent wallet on Concordium testnet (identity 0, testnet IP, no ID)."
+  }
+}

@@ -1,0 +1,18 @@
+{
+    "agentAddress": "37f3bg4GJRZNFdETmh3ZHHnwjbTVm5NZfJVDiSVegKuriJEpoT",
+    "agentCardPath": "/.well-known/agent-card.json",
+    "agentGatePreview": "https://agentgate.agentgate.workers.dev/v1/check-agent/preview",
+    "agentName": "TrueAgent",
+    "agentTagline": "A verified human stands behind every brief.",
+    "briefTimeoutMs": 120000,
+    "explorer": "https://testnet.ccdscan.io",
+    "geminiFallbackModel": "gemini-4-hydrogen",
+    "geminiModel": "gemini-3.5-flash-lite",
+    "grpcNode": "grpc.testnet.concordium.com:20000",
+    "mockPayments": true,
+    "network": "testnet",
+    "owner": "GM XBT",
+    "priceLabel": "0.01 test CCD",
+    "priceMicroCcd": 10000,
+    "registryApp": "https://agent-registry.concordium.com"
+}

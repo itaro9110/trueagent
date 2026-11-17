@@ -1,0 +1,1 @@
+{"description":"TrueAgent — a verified pay-per-brief research agent (Concordium Trusted Agents Hackathon × Encode Club)","engines":{"node":">=22"},"license":"MIT","name":"trueagent","scripts":{"card-hash":"node scripts/card-hash.mjs","smoke":"node scripts/smoke-test.mjs","start":"node src/server.js"},"type":"module","version":"1.0.0"}

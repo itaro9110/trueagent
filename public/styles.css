@@ -1,0 +1,31 @@
+:root { color-scheme: light; --ink: #1a1a2e; --accent: #642afb; --soft: #f4f2ff; --line: #e3defc; }
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); margin: 0; background: #faf9ff; }
+header { background: var(--accent); color: #fff; padding: 2rem 1.5rem 1.5rem; }
+header h1 { margin: 0 0 .25rem; font-size: 2rem; }
+.tagline { margin: 0; opacity: .9; }
+.status { margin-top: 1rem; font-size: .9rem; background: rgba(255,255,255,.15); display: inline-block; padding: .4rem .7rem; border-radius: 999px; }
+main { max-width: 760px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 1px 4px rgba(100,42,251,.06); }
+h2 { margin-top: 0; font-size: 1.15rem; }
+ul { padding-left: 1.1rem; } li { margin: .45rem 0; line-height: 1.5; }
+form { display: flex; gap: .5rem; flex-wrap: wrap; }
+input[type=text] { flex: 1; min-width: 220px; padding: .7rem .9rem; border: 1.5px solid var(--line); border-radius: 10px; font-size: 1rem; }
+button { background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: .7rem 1.1rem; font-size: 1rem; cursor: pointer; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.secondary { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); }
+.hidden { display: none; }
+.error { background: #fdecea; border: 1px solid #f5c6c0; color: #7a1f16; padding: .8rem 1rem; border-radius: 10px; margin-top: 1rem; white-space: pre-wrap; }
+.hint { font-size: .85rem; color: #666; }
+code { background: var(--soft); padding: .1rem .35rem; border-radius: 6px; font-size: .85em; }
+#result h3 { margin-bottom: .25rem; }
+#result ul { margin-top: .5rem; }
+#result .sources { font-size: .85rem; color: #444; }
+#result .receipt { background: var(--soft); border-radius: 10px; padding: .8rem 1rem; margin-top: 1rem; font-size: .88rem; }
+#result .receipt p { margin: .3rem 0; overflow-wrap: anywhere; }
+.spinner { width: 28px; height: 28px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: .5rem 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { text-align: left; padding: .45rem .3rem; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+footer { text-align: center; color: #777; font-size: .85rem; padding: 1rem; }
+footer a { color: var(--accent); }

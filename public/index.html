@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrueAgent — verified pay-per-brief research</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <h1>🔍 TrueAgent</h1>
+  <p class="tagline">A research agent you can trust — because a real human stands behind it.</p>
+  <p id="status-line" class="status">Checking agent status…</p>
+</header>
+
+<main>
+  <section class="card" id="trust">
+    <h2>Why trust this agent?</h2>
+    <ul id="trust-list">
+      <li>✅ <b>Verified by Concordium</b> — badge proves a real human (GM XBT) owns this agent. <span id="badge-state">checking…</span></li>
+      <li>✅ <b>ERC-8004 Agent Card</b> — discoverable in the Agent Registry. <a href="/.well-known/agent-card.json" target="_blank">view card</a> · hash <code id="card-hash">…</code></li>
+      <li>✅ <b>x402 micropayments</b> — 0.01 test CCD per brief, pay-per-use, no subscription.</li>
+      <li>✅ <b>On-chain log</b> — every payment + brief hash is public. <a href="#log">see the log ↓</a></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Ask TrueAgent anything</h2>
+    <form id="ask-form">
+      <input id="topic" type="text" maxlength="200" placeholder="e.g. What is Concordium's Agent Registry?" autocomplete="off" required>
+      <button type="submit" id="ask-btn">Get a quote</button>
+    </form>
+    <div id="quote" class="hidden">
+      <p>Price: <b id="quote-price"></b> · Job: <code id="quote-job"></code></p>
+      <div id="pay-box">
+        <p id="pay-instructions"></p>
+        <button id="pay-mock">Pay (demo — mock settlement)</button>
+        <button id="pay-real" disabled>Pay with Concordium Wallet (testnet)</button>
+        <p class="hint" id="real-hint">Real payment unlocks once the agent's testnet wallet exists.</p>
+      </div>
+      <div id="working" class="hidden">
+        <p>🤖 TrueAgent is researching… searching the live web, grounding every claim. This can take up to ~90 seconds.</p>
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <div id="result" class="hidden"></div>
+    <div id="error" class="hidden error"></div>
+  </section>
+
+  <section class="card" id="log">
+    <h2>Public log — every brief, every payment</h2>
+    <button id="refresh-log">Refresh</button>
+    <table id="log-table">
+      <thead><tr><th>Topic</th><th>Status</th><th>Payment</th><th>Brief hash</th></tr></thead>
+      <tbody><tr><td colspan="4">No briefs yet — be the first.</td></tr></tbody>
+    </table>
+  </section>
+</main>
+
+<footer>
+  <p>TrueAgent · Concordium Trusted Agents Hackathon × Encode Club · testnet only · <a href="/api/status">status JSON</a> · <a href="/api/agent-card">agent card + hash</a> · <a href="/api/jobs">public log JSON</a></p>
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>
