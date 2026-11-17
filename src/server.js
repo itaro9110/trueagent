@@ -149,7 +149,7 @@ const server = createServer(async (req, res) => {
         recipient: config.agentAddress,
         recipientExplorerUrl: config.agentAddress ? `${config.explorer}/accounts/${config.agentAddress}` : null,
         mockPayments: config.mockPayments,
-        badgeRegistered: Boolean(config.agentBadgeId),
+        badgeRegistered: Boolean(badge?.found),
         badge,
         agentCardHash,
         agentCardUrl: config.agentCardPath,
