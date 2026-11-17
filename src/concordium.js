@@ -17,7 +17,7 @@
 import { execFile } from "node:child_process";
 
 export function explorerTxUrl(hash, config) {
-  return `${config.explorer}/transaction/${hash}`;
+  return `${config.explorer}/transactions/${hash}`;
 }
 export function explorerAccountUrl(address, config) {
   return `${config.explorer}/accounts/${address}`;
@@ -64,7 +64,7 @@ export async function verifyPayment({ txHash, expectedAmountMicroCcd, expectedRe
     const out = await new Promise((resolve, reject) => {
       execFile(
         "concordium-client",
-        ["--grpc-ip", "grpc.testnet.concordium.com", "--grpc-port", "20000", "transaction", "status", "--hash", txHash],
+        ["--grpc-ip", "grpc.testnet.concordium.com", "--grpc-port", "20000", "transaction", "status", txHash],
         { timeout: 20_000 },
         (err, stdout, stderr) => (err ? reject(new Error(stderr || err.message)) : resolve(stdout)),
       );
@@ -82,7 +82,7 @@ export async function verifyPayment({ txHash, expectedAmountMicroCcd, expectedRe
   return {
     status: "link-verified",
     detail:
-      "No on-chain query path is available in this build (node-sdk 9.5.3 is broken upstream; concordium-client not installed). " +
+      "No on-chain query path is available in this build (node-sdk 9.5.3 is broken upstream; concordium-client cannot reach the gRPC endpoint from this environment — raw gRPC is blocked, only gRPC-web works). " +
       "The payment is recorded by its tx hash and is verifiable by anyone on CCDScan.",
     explorerUrl,
   };
