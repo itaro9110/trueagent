@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrueAgent — Verified Pay-Per-Brief Research Agent</title>
+<style>
+  :root {
+    --bg: #0B1220;
+    --bg-2: #0E1830;
+    --panel: #121E38;
+    --panel-border: rgba(46, 211, 163, 0.22);
+    --teal: #2ED3A3;
+    --teal-dim: #1FA97F;
+    --text: #F2F5FA;
+    --muted: #A7B2C6;
+    --muted-2: #7C89A3;
+    --danger: #F26D6D;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+  }
+  .slide-deck {
+    position: relative;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+  }
+  @media (min-width: 769px) {
+    .slide-deck {
+      max-width: calc(100vh * 16 / 9);
+      max-height: calc(100vw * 9 / 16);
+      margin: auto;
+      position: absolute; inset: 0;
+    }
+  }
+  .slide {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 56px 72px;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.4s;
+    background:
+      radial-gradient(900px 480px at 85% -10%, rgba(46, 211, 163, 0.10), transparent 60%),
+      radial-gradient(700px 420px at -10% 110%, rgba(46, 211, 163, 0.07), transparent 60%),
+      var(--bg);
+    overflow: hidden;
+  }
+  .slide.active { opacity: 1; visibility: visible; }
+  .slide-content { width: 100%; display: flex; flex-direction: column; gap: 20px; }
+  .kicker {
+    font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--teal); font-weight: 700;
+  }
+  h1 {
+    font-size: 76px; line-height: 1.02; font-weight: 800; letter-spacing: -1px;
+  }
+  h1 .accent { color: var(--teal); }
+  h2 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  h2 .accent { color: var(--teal); }
+  .lede { font-size: 24px; line-height: 1.45; color: var(--muted); max-width: 980px; }
+  .lede strong { color: var(--text); }
+  .foot {
+    position: absolute; left: 72px; right: 72px; bottom: 28px;
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: var(--muted-2); letter-spacing: 0.4px;
+  }
+  .num {
+    position: absolute; top: 30px; right: 72px;
+    font-family: var(--mono); font-size: 14px; color: var(--muted-2);
+  }
+  /* problem list */
+  .problem-list { display: flex; flex-direction: column; gap: 16px; max-width: 1020px; }
+  .problem-item {
+    display: flex; gap: 18px; align-items: flex-start;
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 18px 22px;
+  }
+  .problem-item .x {
+    flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(242, 109, 109, 0.15); color: var(--danger);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 800;
+  }
+  .problem-item h3 { font-size: 22px; margin-bottom: 3px; }
+  .problem-item p { font-size: 17px; line-height: 1.4; color: var(--muted); }
+  /* pillar grid */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .pillar {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-top: 3px solid var(--teal);
+    border-radius: 12px; padding: 22px 18px; min-height: 300px;
+  }
+  .pillar .icon { font-size: 30px; margin-bottom: 12px; }
+  .pillar h3 { font-size: 20px; line-height: 1.25; margin-bottom: 8px; }
+  .pillar p { font-size: 15.5px; line-height: 1.5; color: var(--muted); }
+  .pillar .tag {
+    display: inline-block; margin-top: 12px; font-family: var(--mono);
+    font-size: 12.5px; color: var(--teal);
+    background: rgba(46, 211, 163, 0.10); border-radius: 6px; padding: 4px 8px;
+  }
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .step {
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 22px 18px; min-height: 250px; position: relative;
+  }
+  .step .n {
+    font-size: 52px; font-weight: 800; color: var(--teal); opacity: 0.9; line-height: 1;
+    margin-bottom: 10px;
+  }
+  .step h3 { font-size: 20px; margin-bottom: 8px; }
+  .step p { font-size: 15.5px; line-height: 1.5; color: var(--muted); }
+  .step .mono { font-family: var(--mono); font-size: 13px; color: var(--teal); }
+  .arrow {
+    position: absolute; top: 50%; right: -16px; transform: translateY(-50%);
+    color: var(--teal); font-size: 26px; z-index: 2;
+  }
+  /* metrics */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .metric {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 12px; padding: 20px 18px; text-align: left;
+  }
+  .metric .big { font-size: 40px; font-weight: 800; color: var(--teal); line-height: 1.05; }
+  .metric .lbl { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+  .proof-lines { display: flex; flex-direction: column; gap: 10px; max-width: 1020px; }
+  .proof-line {
+    display: flex; gap: 14px; align-items: baseline;
+    font-size: 18px; line-height: 1.45;
+  }
+  .proof-line .k { flex: 0 0 170px; color: var(--muted); font-size: 15px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+  .proof-line .v { font-family: var(--mono); font-size: 16.5px; color: var(--text); word-break: break-all; }
+  .proof-line .v .ok { color: var(--teal); }
+  /* architecture */
+  .arch { display: flex; align-items: stretch; gap: 0; }
+  .arch-box {
+    flex: 1; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 12px; padding: 20px 16px; text-align: center;
+    display: flex; flex-direction: column; justify-content: center; gap: 6px;
+  }
+  .arch-box.hot { border-color: var(--teal); background: #10233A; }
+  .arch-box h3 { font-size: 19px; }
+  .arch-box p { font-size: 14px; line-height: 1.45; color: var(--muted); }
+  .arch-box .mono { font-family: var(--mono); font-size: 12.5px; color: var(--teal); }
+  .arch-arrow {
+    flex: 0 0 44px; display: flex; align-items: center; justify-content: center;
+    color: var(--teal); font-size: 26px;
+  }
+  .arch-note { font-size: 16px; color: var(--muted); max-width: 980px; }
+  .arch-note strong { color: var(--text); }
+  /* closing */
+  .links { display: flex; flex-direction: column; gap: 12px; max-width: 1020px; }
+  .link-row {
+    display: flex; gap: 16px; align-items: baseline;
+    background: var(--panel); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 13px 18px;
+  }
+  .link-row .k { flex: 0 0 110px; font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); font-weight: 700; }
+  .link-row .v { font-family: var(--mono); font-size: 15.5px; color: var(--text); word-break: break-all; }
+  .plan { display: flex; flex-direction: column; gap: 10px; max-width: 1020px; }
+  .plan div { font-size: 18px; line-height: 1.45; color: var(--muted); }
+  .plan div b { color: var(--text); }
+  .plan div::before { content: "→  "; color: var(--teal); font-weight: 800; }
+  /* nav */
+  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--teal); transition: width 0.3s; z-index: 1000; }
+  .nav-controls { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; z-index: 1000; }
+  .nav-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+  .nav-btn:hover { background: rgba(255,255,255,0.2); }
+  .slide-counter { color: rgba(255,255,255,0.6); font-size: 14px; }
+
+  /* ===== PRINT: one 16:9 page per slide ===== */
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    body { overflow: visible; background: var(--bg); }
+    .slide-deck { position: static; width: auto; height: auto; max-width: none; max-height: none; overflow: visible; }
+    .slide {
+      position: relative; width: 1280px; height: 720px;
+      opacity: 1 !important; visibility: visible !important;
+      page-break-after: always; break-after: page;
+    }
+    .slide:last-child { page-break-after: auto; break-after: auto; }
+    .nav-controls, .progress-bar { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-deck">
+
+  <!-- 1 · Title -->
+  <section class="slide active">
+    <div class="slide-content">
+      <div class="kicker">Concordium Trusted Agents × Encode Club</div>
+      <h1>True<span class="accent">Agent</span></h1>
+      <p class="lede">A research agent you can <strong>trust</strong> — a verified human behind it, an on-chain agent card, and pay-per-brief micropayments. <strong>Trust is the product.</strong></p>
+      <p class="lede" style="font-size:19px;">Solo entry · GM XBT · Concordium testnet · $0 real money</p>
+    </div>
+    <div class="num">01 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+  <!-- 2 · Problem -->
+  <section class="slide">
+    <div class="slide-content">
+      <div class="kicker">The problem</div>
+      <h2>AI agents are everywhere.<br><span class="accent">Trust is nowhere.</span></h2>
+      <div class="problem-list">
+        <div class="problem-item"><div class="x">✕</div><div><h3>Anonymous agents, zero accountability</h3><p>Anyone can spin up an “AI agent” — there is no way to know who is behind it, or whether it will deliver.</p></div></div>
+        <div class="problem-item"><div class="x">✕</div><div><h3>Pay first, get nothing</h3><p>“DM me, pay $50 upfront for research.” The money goes first. The work may never come — and there is no receipt, no log, no recourse.</p></div></div>
+        <div class="problem-item"><div class="x">✕</div><div><h3>Research you cannot check</h3><p>Even when an answer arrives, nothing proves where it came from, who wrote it, or whether it was paid for at all.</p></div></div>
+      </div>
+    </div>
+    <div class="num">02 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+  <!-- 3 · Solution -->
+  <section class="slide">
+    <div class="slide-content">
+      <div class="kicker">The solution</div>
+      <h2>Verified pay-per-brief.<br><span class="accent">Four pillars of trust.</span></h2>
+      <div class="grid-4">
+        <div class="pillar"><div class="icon">🛡️</div><h3>Verified by Concordium</h3><p>A badge proves a real, verified human stands behind the agent — not an anonymous bot.</p><span class="tag">AgentGate: verified ✓</span></div>
+        <div class="pillar"><div class="icon">🪪</div><h3>ERC-8004 Agent Card</h3><p>The agent is registered on-chain in the CIS-8004 Agent Registry. Its card hash is committed, so anyone can check the card was not altered.</p><span class="tag">token 1252 · testnet</span></div>
+        <div class="pillar"><div class="icon">⚡</div><h3>x402 micropayments</h3><p>0.01 test CCD per brief. Pay per use, no subscription. Unpaid requests get a real HTTP 402.</p><span class="tag">0.01 test CCD / brief</span></div>
+        <div class="pillar"><div class="icon">⛓️</div><h3>On-chain log</h3><p>Every payment and every brief hash is public. Every receipt links to its transaction on CCDScan.</p><span class="tag">GET /api/jobs</span></div>
+      </div>
+    </div>
+    <div class="num">03 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+  <!-- 4 · How it works -->
+  <section class="slide">
+    <div class="slide-content">
+      <div class="kicker">How it works</div>
+      <h2>Quote → pay → brief → receipt.<br><span class="accent">Under a minute, on-chain.</span></h2>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3>Request a topic</h3><p>Open the demo, type any topic, get a quote. The quote is valid for 15 minutes.</p><span class="mono">POST /api/quote</span><span class="arrow">→</span></div>
+        <div class="step"><div class="n">2</div><h3>Pay 0.01 test CCD</h3><p>Pay from your Concordium Wallet. The job id travels as the transaction memo.</p><span class="mono">x402 · memo = job id</span><span class="arrow">→</span></div>
+        <div class="step"><div class="n">3</div><h3>Agent researches</h3><p>The service verifies the payment on testnet, then researches and writes a structured brief.</p><span class="mono">Gemini · ~seconds</span><span class="arrow">→</span></div>
+        <div class="step"><div class="n">4</div><h3>Brief + receipt</h3><p>You get the brief plus a receipt: payment hash, brief hash, and a CCDScan link anyone can verify.</p><span class="mono">GET /api/jobs/:id</span></div>
+      </div>
+    </div>
+    <div class="num">04 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+  <!-- 5 · Live proof -->
+  <section class="slide">
+    <div class="slide-content">
+      <div class="kicker">Live proof — not a mock</div>
+      <h2>A real paid brief, <span class="accent">on testnet.</span></h2>
+      <div class="metrics">
+        <div class="metric"><div class="big">0.01</div><div class="lbl">test CCD paid per brief</div></div>
+        <div class="metric"><div class="big">~3.3s</div><div class="lbl">brief delivered after payment</div></div>
+        <div class="metric"><div class="big">#50951026</div><div class="lbl">block height of the payment</div></div>
+        <div class="metric"><div class="big">verified ✓</div><div class="lbl">AgentGate: verified, cardHashMatches</div></div>
+      </div>
+      <div class="proof-lines">
+        <div class="proof-line"><span class="k">Payment tx</span><span class="v">9aa0fae98b5315c50844c1349e0722323c6dcfbc3ec8904482e50c5ca34bc493</span></div>
+        <div class="proof-line"><span class="k">Brief hash</span><span class="v">535f66098ec4af402fa48ae8f98239a5288ebcca05216ecdb72ac3ffc50cc1ce</span></div>
+        <div class="proof-line"><span class="k">Receipt hash</span><span class="v">111b89eda663e17d969e07dac96d77c9c86251856d6d5a58e6f557a97f3da5e2</span></div>
+        <div class="proof-line"><span class="k">Agent card</span><span class="v">ff996370… <span class="ok">· matches on-chain ✓</span></span></div>
+      </div>
+    </div>
+    <div class="num">05 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+  <!-- 6 · Architecture -->
+  <section class="slide">
+    <div class="slide-content">
+      <div class="kicker">Architecture</div>
+      <h2>Zero dependencies. <span class="accent">Two trust anchors.</span></h2>
+      <div class="arch">
+        <div class="arch-box"><h3>👤 Visitor</h3><p>Requests a brief in the demo UI, pays from their Concordium Wallet</p></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box"><h3>🖥️ Demo UI</h3><p>Quote → pay → brief → receipt<br><span class="mono">trueagent-production.up.railway.app</span></p></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box hot"><h3>⚙️ TrueAgent service</h3><p>Node 22, zero dependencies<br><span class="mono">x402 · MCP · public job log</span></p></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box"><h3>🤖 Gemini</h3><p>Writes the structured brief<br><span class="mono">flash-lite</span></p></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box"><h3>⛓️ Concordium testnet</h3><p>Payment, Agent Registry (CIS-8004), AgentGate verification</p></div>
+      </div>
+      <p class="arch-note"><strong>Honest by design:</strong> payment verification is link-verified today (the upstream Node SDK is broken) — the chain proof itself is independently verifiable on CCDScan, and the service upgrades to on-chain verification automatically once the SDK is fixed.</p>
+    </div>
+    <div class="num">06 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+  <!-- 7 · Path to mainnet + closing -->
+  <section class="slide">
+    <div class="slide-content">
+      <div class="kicker">Path to mainnet</div>
+      <h2>From testnet demo to <span class="accent">a storefront for verified research.</span></h2>
+      <div class="plan">
+        <div><b>Same codebase to mainnet</b> — switch the network, price in CCD (or stablecoin once a mainnet x402 facilitator is public).</div>
+        <div><b>Badge re-issued</b> on the mainnet identity, so the same trust story holds with real value.</div>
+        <div><b>Storefront:</b> any verified researcher clones TrueAgent, points it at their own badge and wallet, and sells briefs — TrueAgent becomes the reference implementation.</div>
+        <div><b>Revenue:</b> a small spread on the brief price, with premium tiers (deeper briefs, private topics) later.</div>
+      </div>
+      <div class="links">
+        <div class="link-row"><span class="k">Live demo</span><span class="v">https://trueagent-production.up.railway.app</span></div>
+        <div class="link-row"><span class="k">Repo</span><span class="v">https://github.com/itaro9110/trueagent</span></div>
+        <div class="link-row"><span class="k">Video</span><span class="v">https://www.youtube.com/watch?v=syF7xTJgcVo</span></div>
+      </div>
+    </div>
+    <div class="num">07 / 07</div>
+    <div class="foot"><span>TrueAgent — Verified Pay-Per-Brief Research Agent</span><span>testnet only</span></div>
+  </section>
+
+</div><!-- /.slide-deck -->
+
+<div class="nav-controls">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <span class="slide-counter"><span id="current">1</span> / <span id="total">7</span></span>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+  let current = 1;
+  const total = document.querySelectorAll('.slide').length;
+  document.getElementById('total').textContent = total;
+  function showSlide(n) {
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    current = n;
+    document.querySelectorAll('.slide').forEach((s, i) => {
+      s.classList.toggle('active', i === n - 1);
+    });
+    document.getElementById('current').textContent = n;
+    document.getElementById('progressBar').style.width = (n / total * 100) + '%';
+  }
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-controls')) nextSlide();
+  });
+  showSlide(1);
+</script>
+</body>
+</html>
