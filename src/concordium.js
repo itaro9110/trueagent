@@ -17,7 +17,10 @@
 import { execFile } from "node:child_process";
 
 export function explorerTxUrl(hash, config) {
-  return `${config.explorer}/transactions/${hash}`;
+  // CCDScan testnet has no working /transactions/<hash> or /transaction/<hash>
+  // route (both 404, verified by curl + cloud browser 2026-11-18). The
+  // transaction detail drawer URL is the form that resolves (HTTP 200).
+  return `${config.explorer}/?dcount=1&dentity=transaction&dhash=${hash}`;
 }
 export function explorerAccountUrl(address, config) {
   return `${config.explorer}/accounts/${address}`;
